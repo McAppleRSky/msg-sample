@@ -1,0 +1,47 @@
+version: '3'
+services:
+
+#  bergen-db:
+#    environment:
+#    - DB_NAME=msg
+#    - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+#    volumes:
+#    - /tmp/bergen/var/lib/pg/data:/var/lib/postgresql/data
+#    - /tmp/bergen/tmp/pgdb:/docker-entrypoint-initdb.d:z
+#    image: 'postgres:13.4-alpine'
+#    ports:
+#    - 5432:5432
+#    restart: always
+#    networks:
+#      default:
+#        ipv4_address: 192.168.9.4
+
+  bergen-msg:
+    build:
+      context: ./msg
+#      target: msg_with_script
+      args:
+        - ARTEMIS_USER=$ARTEMIS_USER
+        - ARTEMIS_PASSWORD=$ARTEMIS_PASSWORD
+#    environment:
+#      USR: ${ARTEMIS_USER}
+#      PWD: ${ARTEMIS_PASSWORD}
+    container_name: bergen-msg
+#    restart: on-failure
+#    volumes:
+#      - /tmp/bergen/usr/broker:/usr/broker
+#      - ./msg/:/docker-entrypoint-initdb.d/:ro
+    ports:
+      - 8161:8161
+      - 9404:9404
+      - 9876:9876
+      - 61616:61616
+      - 5445:5445
+      - 5672:5672
+      - 1883:1883
+      - 61613:61613
+      - 5432:5432
+#    networks:
+#      default:
+#        ipv4_address: 192.168.9.2
+
