@@ -1,4 +1,4 @@
-package tech.bergen.service;
+package tech.bergen._2_service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
