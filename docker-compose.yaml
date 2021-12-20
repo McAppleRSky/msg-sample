@@ -28,7 +28,18 @@ services:
 #      PWD: ${ARTEMIS_PASSWORD}
     container_name: bergen-msg
 #    restart: on-failure
-#    volumes:
+    volumes:
+      # Expose some outstanding folders
+      - /tmp/bergen/var/lib/broker/data:/var/lib/broker-instance/data
+#      - /tmp/bergen/var/lib/broker/tmp:/var/lib/broker-instance/tmp
+#      - /tmp/bergen/var/lib/broker/tmp:/var/lib/broker-instance/log
+#      - /tmp/bergen/opt/jms/activemq/etc:/opt/jms/apache-artemis-2.19.0/etc
+#      - /tmp/bergen/var/lib/broker/etc-override:/var/lib/broker-instance/etc-override
+#      - /tmp/bergen/var/lib/broker/lock:/var/lib/broker-instance/lock
+#      - /tmp/bergen/usr/broker/tmp:/usr/broker/tmp
+#      - /tmp/bergen/usr/broker/etc:/usr/broker/etc
+#      - /tmp/bergen/usr/broker/etc-override:/usr/broker/etc-override
+#      - /tmp/bergen/usr/broker/lock:/usr/broker/lock
 #      - /tmp/bergen/usr/broker:/usr/broker
 #      - ./msg/:/docker-entrypoint-initdb.d/:ro
     ports:

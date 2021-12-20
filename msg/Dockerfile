@@ -9,7 +9,9 @@ ARG ARTEMIS_PASSWORD
 ENV ARTEMIS_USER ${ARTEMIS_USER}
 ENV ARTEMIS_PASSWORD ${ARTEMIS_PASSWORD}
 
-RUN mkdir /opt/jms
+RUN mkdir /opt/jms && mkdir /var/lib/broker-instance; \
+    chown -R 1000:1000 /var/lib/broker-instance
+
 WORKDIR /opt/jms
 
 # RUN apt-get update
@@ -20,12 +22,8 @@ WORKDIR /opt/jms
 COPY ./apache-artemis-2.19.0-bin.tar.gz /tmp
 
 RUN tar -xvf /tmp/apache-artemis-2.19.0-bin.tar.gz -C . && \
-    rm /tmp/apache-artemis-2.19.0-bin.tar.gz && \
-#     groupadd -g 1000 -r artemis && useradd -r -u 1000 -g artemis artemis; \
-#     chown -R activemq:activemq ./apache-artemis-2.19.0; \
-    ln -s ./apache-artemis-2.19.0/ ./activemq
-    #; \
-#     chown activemq:activemq ./activemq
+    ln -s ./apache-artemis-2.19.0/ ./activemq && \
+    rm /tmp/apache-artemis-2.19.0-bin.tar.gz
 
 # Web Server
 EXPOSE 8161 \
@@ -44,13 +42,17 @@ EXPOSE 8161 \
 
 # USER artemis
 
-RUN  ./activemq/bin/artemis create /usr/broker \
+# Expose some outstanding folders
+# VOLUME ["/var/lib/broker-instance"]
+
+RUN ./activemq/bin/artemis create /var/lib/broker-instance \
         --user ${ARTEMIS_USER} \
         --password ${ARTEMIS_PASSWORD} \
         --http-host 0.0.0.0 \
         --relax-jolokia \
-        --require-login
+        --require-login; \
+    chown -R 1000:1000 /var/lib/broker-instance/data
 
-WORKDIR /usr/broker/bin
+WORKDIR /var/lib/broker-instance/bin
 
 ENTRYPOINT ["./artemis", "run"]
