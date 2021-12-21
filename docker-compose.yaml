@@ -31,6 +31,7 @@ services:
     volumes:
       # Expose some outstanding folders
       - /tmp/bergen/var/lib/broker/data:/var/lib/broker-instance/data
+      - ./msg/broker.xml:/var/lib/broker-instance/etc/broker.xml
 #      - /tmp/bergen/var/lib/broker/tmp:/var/lib/broker-instance/tmp
 #      - /tmp/bergen/var/lib/broker/tmp:/var/lib/broker-instance/log
 #      - /tmp/bergen/opt/jms/activemq/etc:/opt/jms/apache-artemis-2.19.0/etc

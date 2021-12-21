@@ -14,6 +14,8 @@ import java.net.http.HttpResponse;
 import java.util.List;
 
 import static java.time.LocalDateTime.now;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class ClientTest {
 
@@ -21,7 +23,7 @@ class ClientTest {
 	private static final String RES = "/api/0.0.1/msg";
 	private static final String POSTS_API_URL = HOST + RES;
 
-	private static final String MESSAGE = new HttpMessage(0, now().format(tech.bergen.Main.getDateTimeFormatter()), "body", "queue0").toString();
+	private static final String MESSAGE = new HttpMessage(0, now().format(tech.bergen.Main.getDateTimeFormatter()), "body", "Q.Test").toString();
 
 	@Test
 	public void main_test() {
@@ -51,7 +53,10 @@ class ClientTest {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		if (response != null) {
+		assertNotNull(response);
+		assertEquals(200, response.statusCode());
+		String responseBody = response.body();
+		/*if (response != null) {
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.findAndRegisterModules();
 			List<HttpMessage> posts = null;
@@ -61,8 +66,7 @@ class ClientTest {
 				e.printStackTrace();
 			}
 			posts.forEach(System.out::println);
-		}
-
+		}*/
 		server.stop();
 	}
 

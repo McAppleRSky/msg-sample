@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Service;
-import tech.bergen.model.JmsMessage;
 import tech.bergen.model.HttpMessage;
 
 @Service
@@ -21,17 +20,15 @@ public class DispatcherService {
     public void sendMessage(String message){
         ObjectMapper objectMapper = new ObjectMapper();
         HttpMessage httpMessage = null;
-//        JmsMessage jmsMessage = null;
         String parentMessage = null, queueName = null;
         try {
             httpMessage = objectMapper.readValue(message, HttpMessage.class);
-//            jmsMessage = objectMapper.readValue(parentMessage, JmsMessage.class);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
         parentMessage = httpMessage.toStringParent();
         queueName = httpMessage.getQueueName();
-//        jmsTemplate.convertAndSend(jmsQueue, message);
         jmsTemplate.convertAndSend(queueName, parentMessage);
     }
+
 }
