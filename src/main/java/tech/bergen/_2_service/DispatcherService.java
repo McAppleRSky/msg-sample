@@ -6,9 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PostMapping;
 import tech.bergen.model.JmsMessage;
-import tech.bergen.model.PostMessage;
+import tech.bergen.model.HttpMessage;
 
 @Service
 public class DispatcherService {
@@ -21,15 +20,18 @@ public class DispatcherService {
 
     public void sendMessage(String message){
         ObjectMapper objectMapper = new ObjectMapper();
-        PostMessage postMessage = null;
+        HttpMessage httpMessage = null;
+//        JmsMessage jmsMessage = null;
+        String parentMessage = null, queueName = null;
         try {
-            postMessage = objectMapper.readValue(message, PostMessage.class);
+            httpMessage = objectMapper.readValue(message, HttpMessage.class);
+//            jmsMessage = objectMapper.readValue(parentMessage, JmsMessage.class);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
-        String queueName = postMessage.getQueueName();
-        JmsMessage jmsMessage = postMessage;
+        parentMessage = httpMessage.toStringParent();
+        queueName = httpMessage.getQueueName();
 //        jmsTemplate.convertAndSend(jmsQueue, message);
-        jmsTemplate.convertAndSend(queueName, jmsMessage);
+        jmsTemplate.convertAndSend(queueName, parentMessage);
     }
 }

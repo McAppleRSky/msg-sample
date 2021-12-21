@@ -1,6 +1,7 @@
 package tech.bergen.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
@@ -10,16 +11,15 @@ import org.springframework.format.annotation.DateTimeFormat.ISO;
 
 public class JmsMessage {
 
-	protected int id;
-	@DateTimeFormat(iso = ISO.DATE_TIME)
-	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-	protected LocalDateTime dateTime;
-	protected String body;
+	private int id;
+	@JsonProperty("date_time")
+	private String dateTime;
+	private String body;
 
 	@Override
 	public String toString() {
 		return "{\"id\":\"" + id
-				+ "\",\"dtime\":\"" + dateTime.format(tech.bergen.Main.getDateTimeFormatter())
+				+ "\",\"date_time\":\"" + dateTime
 				+ "\",\"body\":\"" + body
 				+ "\"}";
 	}
@@ -27,7 +27,7 @@ public class JmsMessage {
 	public JmsMessage() {
 	}
 
-	public JmsMessage(int id, LocalDateTime dateTime, String body) {
+	public JmsMessage(int id, String dateTime, String body) {
 		this.id = id;
 		this.dateTime = dateTime;
 		this.body = body;
@@ -37,7 +37,7 @@ public class JmsMessage {
 		return id;
 	}
 
-	public LocalDateTime getDateTime() {
+	public String getDateTime() {
 		return dateTime;
 	}
 
@@ -49,7 +49,7 @@ public class JmsMessage {
 		this.id = id;
 	}
 
-	public void setDateTime(LocalDateTime dateTime) {
+	public void setDateTime(String dateTime) {
 		this.dateTime = dateTime;
 	}
 

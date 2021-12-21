@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
-import tech.bergen.model.PostMessage;
+import tech.bergen.model.HttpMessage;
 
 import java.io.IOException;
 import java.net.URI;
@@ -15,13 +15,13 @@ import java.util.List;
 
 import static java.time.LocalDateTime.now;
 
-class MainClientTest {
+class ClientTest {
 
 	private static final String HOST = "http://localhost:8080";
 	private static final String RES = "/api/0.0.1/msg";
 	private static final String POSTS_API_URL = HOST + RES;
 
-	private static final String MESSAGE = new PostMessage(0, now(), "body", "queue0").toString();
+	private static final String MESSAGE = new HttpMessage(0, now().format(tech.bergen.Main.getDateTimeFormatter()), "body", "queue0").toString();
 
 	@Test
 	public void main_test() {
@@ -54,9 +54,9 @@ class MainClientTest {
 		if (response != null) {
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.findAndRegisterModules();
-			List<PostMessage> posts = null;
+			List<HttpMessage> posts = null;
 			try {
-				posts = mapper.readValue(response.body(), new TypeReference<List<PostMessage>>() {});
+				posts = mapper.readValue(response.body(), new TypeReference<List<HttpMessage>>() {});
 			} catch (JsonProcessingException e) {
 				e.printStackTrace();
 			}

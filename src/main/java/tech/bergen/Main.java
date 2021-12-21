@@ -11,8 +11,8 @@ import java.time.format.DateTimeFormatter;
 @SpringBootApplication
 public class Main {
 
-	@Getter
 	private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+	public static DateTimeFormatter getDateTimeFormatter(){return dateTimeFormatter;};
 
 	public static void main(String[] args) {
 		SpringApplication.run(Main.class, args);

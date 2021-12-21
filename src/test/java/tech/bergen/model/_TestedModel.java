@@ -1,6 +1,6 @@
 package tech.bergen.model;
 
-class TestModel {
+class _TestedModel {
     private String color, type;
     public String getColor() {return color;}
     public void setColor(String color) {this.color = color;}
