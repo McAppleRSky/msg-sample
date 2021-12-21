@@ -1,17 +1,17 @@
 package tech.bergen._2_service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.stereotype.Service;
-import org.apache.logging.log4j.Logger;
 
 @Service
+@Slf4j
 public class ReceiverService {
 
-    //    Logger log = LoggerFactory.getLogger(ReceiverService.class);
-    private static final Logger logger = tech.bergen.Main.configureLog4j(ReceiverService.class);
+//    Logger log = LoggerFactory.getLogger(ReceiverService.class);
 
     @JmsListener(destination = "${jms.queue}")
     public void receiveMessage(String message){
-        logger.info("Received message: " + message);
+        log.info("Received message: " + message);
     }
 }

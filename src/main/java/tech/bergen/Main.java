@@ -1,14 +1,5 @@
 package tech.bergen;
 
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.core.LoggerContext;
-import org.apache.logging.log4j.core.appender.ConsoleAppender;
-import org.apache.logging.log4j.core.config.Configurator;
-import org.apache.logging.log4j.core.config.builder.api.ConfigurationBuilder;
-import org.apache.logging.log4j.core.config.builder.api.ConfigurationBuilderFactory;
-import org.apache.logging.log4j.core.config.builder.api.RootLoggerComponentBuilder;
-import org.apache.logging.log4j.core.config.builder.impl.BuiltConfiguration;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -26,14 +17,14 @@ public class Main {
 		SpringApplication.run(Main.class, args);
 	}
 
-	public static Logger configureLog4j(Class<?> clazz){
+	/*public static Logger configureLog4j(Class<?> clazz){
 		ConfigurationBuilder<BuiltConfiguration> cfgBuilder = ConfigurationBuilderFactory.newConfigurationBuilder();
 		cfgBuilder
 				.add(cfgBuilder
 						.newAppender("Stdout", "CONSOLE")
-						/*.add(cfgBuilder
+						*//*.add(cfgBuilder
                                 .newLayout("PatternLayout")
-                                .addAttribute("pattern", "%d [%t] %-5level: %msg%n%throwable"))*/
+                                .addAttribute("pattern", "%d [%t] %-5level: %msg%n%throwable"))*//*
 						.addAttribute("target", ConsoleAppender.Target.SYSTEM_OUT))
 				.add(cfgBuilder
 						.newAppender("fileAppender", "FILE")
@@ -55,6 +46,5 @@ public class Main {
 				.initialize(cfgBuilder
 						.add(rootLoggerBuilder)
 						.build());
-		return context.getLogger(Main.class);
-	}
+		return context.getLogger(clazz);}*/
 }

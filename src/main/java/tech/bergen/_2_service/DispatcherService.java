@@ -31,4 +31,10 @@ public class DispatcherService {
         jmsTemplate.convertAndSend(queueName, parentMessage);
     }
 
+    // https://habr.com/ru/post/352954/
+//    @Scheduled(cron = "*/10 * * * * *")
+    void res(){
+        jmsTemplate.receive();
+    }
+
 }
