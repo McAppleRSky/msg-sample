@@ -1,45 +1,54 @@
 package tech.bergen;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
-import tech.bergen.model.HttpMessage;
+import tech.bergen.model.serial.Queue;
 
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.List;
 
-import static java.time.LocalDateTime.now;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+@SuppressWarnings("deprecation")
 class ClientTest {
 
 	private static final String HOST = "http://localhost:8080";
 	private static final String RES = "/api/0.0.1/msg";
 	private static final String POSTS_API_URL = HOST + RES;
 
-	private static final String MESSAGE = new HttpMessage(0, now().format(tech.bergen.Main.getDateTimeFormatter()), "body", "Q.Test").toString();
+	private static final int WAIT_SPRING_UP = 30_000;
+
+	private static final String QUEUE_NAME = "Q.Test";
 
 	@Test
 	public void main_test() {
 		Thread server = new Thread(() -> Main.main(new String[]{}));
 		server.start();
 		try {
-			Thread.sleep(30_000);
+			Thread.sleep(WAIT_SPRING_UP);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-
-		System.out.println("msg to : " + POSTS_API_URL);
 		HttpClient client = HttpClient.newHttpClient();
-		// https://stackoverflow.com/questions/7181534/http-post-using-json-in-java
+
+		Queue queue = new Queue(QUEUE_NAME, new _Rand()._messageSome(1, 10));
+		int messageCount = queue.getMassages().size();
+		ObjectMapper mapper = new ObjectMapper();
+		String body = null;
+//		mapper.enable(SerializationFeature.INDENT_OUTPUT);
+		try {
+			body = mapper.writeValueAsString(queue);
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+
 		HttpRequest request = HttpRequest.newBuilder()
-				.POST(HttpRequest.BodyPublishers.ofString(MESSAGE))
+				.POST(HttpRequest.BodyPublishers.ofString(body))
 				.header("content-type", "application/json")
 				.uri(URI.create(POSTS_API_URL))
 				.build();
@@ -54,20 +63,10 @@ class ClientTest {
 			e.printStackTrace();
 		}
 		assertNotNull(response);
-		assertEquals(200, response.statusCode());
+		int EXPECTED_HTTP_STATUS = 200;
+		assertEquals(EXPECTED_HTTP_STATUS, response.statusCode());
 		String responseBody = response.body();
-		/*if (response != null) {
-			ObjectMapper mapper = new ObjectMapper();
-			mapper.findAndRegisterModules();
-			List<HttpMessage> posts = null;
-			try {
-				posts = mapper.readValue(response.body(), new TypeReference<List<HttpMessage>>() {});
-			} catch (JsonProcessingException e) {
-				e.printStackTrace();
-			}
-			posts.forEach(System.out::println);
-		}*/
-		server.stop();
+		server.stop(); // deprecated
 	}
 
 }

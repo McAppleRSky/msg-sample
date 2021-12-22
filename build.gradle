@@ -26,27 +26,26 @@ ext {
     fingBugs_version = "3.0.2"
     h2_version = "1.4.200"
 }
+
 dependencies {
     compileOnly "com.google.code.findbugs:jsr305:$fingBugs_version"
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-artemis'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    runtimeOnly 'org.postgresql:postgresql'
+    implementation 'org.flywaydb:flyway-core'
+    implementation 'org.apache.commons:commons-lang3'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 //    implementation "com.h2database:h2:$h2_version"
+//    implementation 'org.springframework.boot:spring-boot-starter-validation'
+//    implementation 'org.springframework.boot:spring-boot-starter-security'
+//    testImplementation 'org.springframework.security:spring-security-test'
 //    testImplementation 'org.junit.jupiter:junit-jupiter'
 //    testImplementation 'org.mockito:mockito-junit-jupiter'
 //    testImplementation 'org.mockito:mockito-inline'
-    testImplementation 'org.apache.commons:commons-lang3'
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-starter-artemis'
-//    implementation 'org.springframework.boot:spring-boot-starter-validation'
-//    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-//    implementation 'org.springframework:spring-jms'
-//    implementation 'org.springframework.boot:spring-boot-starter-security'
-    runtimeOnly 'org.postgresql:postgresql'
-    implementation 'org.flywaydb:flyway-core'
-    compileOnly 'org.projectlombok:lombok'
-    annotationProcessor 'org.projectlombok:lombok'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-//    testImplementation 'org.springframework.security:spring-security-test'
 }
-
 
 test {
     useJUnitPlatform()

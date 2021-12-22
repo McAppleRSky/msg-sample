@@ -1,59 +1,47 @@
 version: '3'
 services:
 
-#  bergen-db:
-#    environment:
-#    - DB_NAME=msg
-#    - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-#    volumes:
-#    - /tmp/bergen/var/lib/pg/data:/var/lib/postgresql/data
-#    - /tmp/bergen/tmp/pgdb:/docker-entrypoint-initdb.d:z
-#    image: 'postgres:13.4-alpine'
-#    ports:
-#    - 5432:5432
-#    restart: always
+  bergen-db:
+    image: 'postgres:14.1-alpine'
+    environment:
+    - DB_NAME=msg
+    - POSTGRES_PASSWORD=$POSTGRES_PASSWORD
+    volumes:
+    - /tmp/bergen/var/lib/postgresql/data:/var/lib/postgresql/data
+#    - /tmp/bergen/tmp/pgdb:/docker-entrypoint-initdb.d
+    ports:
+    - 5432:5432
+    restart: always
 #    networks:
 #      default:
 #        ipv4_address: 192.168.9.4
 
   bergen-msg:
     build:
-      context: ./msg
-#      target: msg_with_script
+      context: ./docker
       args:
         - ARTEMIS_USER=$ARTEMIS_USER
         - ARTEMIS_PASSWORD=$ARTEMIS_PASSWORD
-#    environment:
-#      USR: ${ARTEMIS_USER}
-#      PWD: ${ARTEMIS_PASSWORD}
     container_name: bergen-msg
-#    restart: on-failure
     volumes:
       # Expose some outstanding folders
       - /tmp/bergen/var/lib/broker/data:/var/lib/broker-instance/data
-      - ./msg/broker.xml:/var/lib/broker-instance/etc/broker.xml
-#      - /tmp/bergen/var/lib/broker/tmp:/var/lib/broker-instance/tmp
-#      - /tmp/bergen/var/lib/broker/tmp:/var/lib/broker-instance/log
-#      - /tmp/bergen/opt/jms/activemq/etc:/opt/jms/apache-artemis-2.19.0/etc
-#      - /tmp/bergen/var/lib/broker/etc-override:/var/lib/broker-instance/etc-override
-#      - /tmp/bergen/var/lib/broker/lock:/var/lib/broker-instance/lock
-#      - /tmp/bergen/usr/broker/tmp:/usr/broker/tmp
-#      - /tmp/bergen/usr/broker/etc:/usr/broker/etc
-#      - /tmp/bergen/usr/broker/etc-override:/usr/broker/etc-override
-#      - /tmp/bergen/usr/broker/lock:/usr/broker/lock
-#      - /tmp/bergen/usr/broker:/usr/broker
-#      - ./msg/:/docker-entrypoint-initdb.d/:ro
+      - ./docker/broker.xml:/var/lib/broker-instance/etc/broker.xml
     ports:
+      # Web Server
       - 8161:8161
+      # JMX Exporter
       - 9404:9404
-      - 9876:9876
+      # Port for CORE,MQTT,AMQP,HORNETQ,STOMP,OPENWIRE
       - 61616:61616
+      # Port for HORNETQ,STOMP
       - 5445:5445
+      # Port for AMQP
       - 5672:5672
+      # Port for MQTT
       - 1883:1883
+      #Port for STOMP
       - 61613:61613
-      - 5432:5432
 #    networks:
 #      default:
 #        ipv4_address: 192.168.9.2
-

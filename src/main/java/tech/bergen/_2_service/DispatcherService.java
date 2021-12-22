@@ -2,11 +2,14 @@ package tech.bergen._2_service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Service;
-import tech.bergen.model.HttpMessage;
+import tech.bergen.model.serial.Message;
+import tech.bergen.model.serial.Queue;
+
+import java.util.List;
 
 @Service
 public class DispatcherService {
@@ -14,27 +17,32 @@ public class DispatcherService {
     @Autowired
     JmsTemplate jmsTemplate;
 
-    @Value("${jms.queue}")
-    String jmsQueue;
+//    @Value("${jms.queue}") String jmsQueue;
 
-    public void sendMessage(String message){
+    public int sendMessage(String queueMessages){
+        int messageCount = -1;
         ObjectMapper objectMapper = new ObjectMapper();
-        HttpMessage httpMessage = null;
-        String parentMessage = null, queueName = null;
+        String queueName = null;
+        List<Message> massages = null;
         try {
-            httpMessage = objectMapper.readValue(message, HttpMessage.class);
+            Queue queue = objectMapper.readValue(queueMessages, Queue.class);
+            queueName = queue.getName();
+            massages = queue.getMassages();
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
-        parentMessage = httpMessage.toStringParent();
-        queueName = httpMessage.getQueueName();
-        jmsTemplate.convertAndSend(queueName, parentMessage);
-    }
-
-    // https://habr.com/ru/post/352954/
-//    @Scheduled(cron = "*/10 * * * * *")
-    void res(){
-        jmsTemplate.receive();
+        messageCount = massages.size();
+        try {
+            for (Message message : massages) {
+                ObjectMapper mapper = new ObjectMapper();
+                mapper.enable(SerializationFeature.INDENT_OUTPUT);
+                String serialMessage = mapper.writeValueAsString(message);
+                jmsTemplate.convertAndSend(queueName, serialMessage);
+            }
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return messageCount;
     }
 
 }

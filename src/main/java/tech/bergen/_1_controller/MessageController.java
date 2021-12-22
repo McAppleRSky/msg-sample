@@ -16,8 +16,8 @@ public class MessageController {
     DispatcherService dispatcherService;
 
     @PostMapping(value = "/api/0.0.1/msg")
-    public ResponseEntity<String> send(@RequestBody String message){
-        dispatcherService.sendMessage(message);
-        return new ResponseEntity<>("Message sent: " + message, HttpStatus.OK);
+    public ResponseEntity<String> send(@RequestBody String body){
+        int count = dispatcherService.sendMessage(body);
+        return new ResponseEntity<>("Message sent: " + count, count > 0 ? HttpStatus.OK : HttpStatus.UNPROCESSABLE_ENTITY);
     }
 }
