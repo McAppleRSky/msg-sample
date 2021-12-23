@@ -2,6 +2,7 @@ package tech.bergen._3_repository;
 
 import org.apache.commons.lang3.NotImplementedException;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import tech.bergen.model.persist.Message;
 
 import javax.annotation.Nonnull;
@@ -11,6 +12,7 @@ import javax.persistence.PersistenceContext;
 import java.util.List;
 
 @Repository
+@Transactional
 public class MessageDaoImpl implements MessageDao {
 
     @PersistenceContext

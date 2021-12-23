@@ -23,7 +23,7 @@ public class _Rand {
         return min + (int)(Math.random() * ((_max - min) + 1));
     }
 
-    public static Message _message(){
+    public Message _message(){
         return new Message(nextInt(), now().format(Main.getDateTimeFormatter()), randomAlphabetic(BODY_LENGTH));
     }
 
