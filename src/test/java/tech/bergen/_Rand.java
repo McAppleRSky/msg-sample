@@ -1,6 +1,6 @@
 package tech.bergen;
 
-import tech.bergen.model.Message;
+import tech.bergen.model.serial.Message;
 
 import java.util.ArrayList;
 import java.util.List;
