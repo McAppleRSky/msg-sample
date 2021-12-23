@@ -24,7 +24,6 @@ services:
         - ARTEMIS_PASSWORD=$ARTEMIS_PASSWORD
     container_name: bergen-msg
     volumes:
-      # Expose some outstanding folders
       - /tmp/bergen/var/lib/broker/data:/var/lib/broker-instance/data
       - ./docker/broker.xml:/var/lib/broker-instance/etc/broker.xml
     ports:
